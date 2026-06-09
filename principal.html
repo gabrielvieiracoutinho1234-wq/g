@@ -1,31 +1,31 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Página Principal - GLCG</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-* { box-sizing: border-box; }
-body { margin: 0; font-family: 'Poppins', sans-serif; background-color: #fff; display: flex; flex-direction: column; min-height: 100vh; }
-header { width: 100%; background-color: #000; display: flex; justify-content: center; align-items: center; padding: 20px 0; }
-.logo { display: flex; flex-direction: column; align-items: center; color: #c0392b; font-weight: 700; font-size: 38px; line-height: 1; }
-.logo span { color: #2e7d32; font-size: 14px; letter-spacing: 1px; }
-.main-container { display: flex; flex: 1; }
-.sidebar { width: 250px; background: #e3e3e3; padding-top: 30px; display: flex; flex-direction: column; gap: 10px; }
-.menu-item { display: flex; align-items: center; gap: 12px; padding: 14px 20px; text-decoration: none; color: #000; font-size: 16px; border-radius: 8px; cursor: pointer; }
-.menu-item:hover, .menu-item.active { background-color: #d5d5d5; }
-.content { flex: 1; display: flex; justify-content: center; align-items: center; padding: 40px; }
-.view-section { display: none; width: 100%; max-width: 900px; }
-.view-section.active { display: block; }
-.welcome-box { background: #d9d9d9; padding: 40px 60px; border-radius: 40px; font-size: 28px; text-align: center; margin: 0 auto; max-width: 500px; }
-.profile-box, .admin-box { background: #f4f4f4; padding: 40px; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-.user-table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
-.user-table th, .user-table td { border: 1px solid #ddd; padding: 12px; text-align: left; font-size: 14px; }
-.btn-action { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; margin-right: 5px; font-weight: 600; }
-.btn-edit { background: #f0ad4e; color: white; }
-.btn-del { background: #d9534f; color: white; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Página Principal - GLCG</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: 'Poppins', sans-serif; background-color: #fff; display: flex; flex-direction: column; min-height: 100vh; }
+    header { width: 100%; background-color: #000; display: flex; justify-content: center; align-items: center; padding: 20px 0; }
+    .logo { display: flex; flex-direction: column; align-items: center; color: #c0392b; font-weight: 700; font-size: 38px; line-height: 1; }
+    .logo span { color: #2e7d32; font-size: 14px; letter-spacing: 1px; }
+    .main-container { display: flex; flex: 1; }
+    .sidebar { width: 250px; background: #e3e3e3; padding-top: 30px; display: flex; flex-direction: column; gap: 10px; }
+    .menu-item { display: flex; align-items: center; gap: 12px; padding: 14px 20px; text-decoration: none; color: #000; font-size: 16px; border-radius: 8px; cursor: pointer; }
+    .menu-item:hover, .menu-item.active { background-color: #d5d5d5; }
+    .content { flex: 1; display: flex; justify-content: center; align-items: center; padding: 40px; }
+    .view-section { display: none; width: 100%; max-width: 900px; }
+    .view-section.active { display: block; }
+    .welcome-box { background: #d9d9d9; padding: 40px 60px; border-radius: 40px; font-size: 28px; text-align: center; margin: 0 auto; max-width: 500px; }
+    .profile-box, .admin-box { background: #f4f4f4; padding: 40px; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    .user-table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
+    .user-table th, .user-table td { border: 1px solid #ddd; padding: 12px; text-align: left; font-size: 14px; }
+    .btn-action { padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; margin-right: 5px; font-weight: 600; }
+    .btn-edit { background: #f0ad4e; color: white; }
+    .btn-del { background: #d9534f; color: white; }
+  </style>
 </head>
 <body>
 
@@ -55,7 +55,7 @@ header { width: 100%; background-color: #000; display: flex; justify-content: ce
       <div class="admin-box">
         <h2>Painel do Administrador</h2>
         <table class="user-table">
-          <thead><tr><th>Documento</th><th>E-mail</th><th>Senha</th><th>Ações</th></tr></thead>
+          <thead><tr><th>Documento</th><th>E-mail</th><th>Senha</th><th>Permissão</th><th>Ações</th></tr></thead>
           <tbody id="tabelaUsuariosCorpo"></tbody>
         </table>
       </div>
@@ -90,8 +90,9 @@ function carregarTabela() {
   const corpo = document.getElementById('tabelaUsuariosCorpo');
   corpo.innerHTML = '';
   usuarios.forEach((u, i) => {
+    const cargo = u.isAdmin ? "⭐ Administrador" : "👤 Usuário";
     corpo.innerHTML += `<tr>
-      <td>${u.login}</td><td>${u.email}</td><td>${u.senha}</td>
+      <td>${u.login}</td><td>${u.email}</td><td>${u.senha}</td><td>${cargo}</td>
       <td>
         <button class="btn-action btn-edit" onclick="editar(${i})">Editar</button>
         <button class="btn-action btn-del" onclick="deletar(${i})">Excluir</button>
@@ -102,11 +103,16 @@ function carregarTabela() {
 
 function editar(i) {
   const usuarios = JSON.parse(localStorage.getItem('usuarios'));
-  const user = usuarios[i];
-  const email = prompt("Novo e-mail:", user.email);
-  const senha = prompt("Nova senha:", user.senha);
-  if (email) user.email = email;
-  if (senha) user.senha = senha;
+  let user = usuarios[i];
+  
+  const novoEmail = prompt("Novo e-mail:", user.email);
+  const novaSenha = prompt("Nova senha:", user.senha);
+  const tornarAdmin = confirm("Deseja definir como Administrador? (OK para Sim, Cancelar para Usuário Comum)");
+  
+  if (novoEmail !== null) user.email = novoEmail;
+  if (novaSenha !== null) user.senha = novaSenha;
+  user.isAdmin = tornarAdmin;
+
   localStorage.setItem('usuarios', JSON.stringify(usuarios));
   carregarTabela();
 }
