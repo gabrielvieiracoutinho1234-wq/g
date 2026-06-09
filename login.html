@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Login - GLCG Supermercado</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+body { margin: 0; font-family: 'Poppins', sans-serif; background-color: #fff; display: flex; flex-direction: column; align-items: center; }
+header { width: 100%; background-color: #000; display: flex; justify-content: center; align-items: center; padding: 20px 0; }
+.logo { display: flex; flex-direction: column; align-items: center; color: #c0392b; font-weight: 700; font-size: 38px; line-height: 1; }
+.logo span { color: #2e7d32; font-size: 14px; letter-spacing: 1px; }
+.card { width: 350px; margin: 60px auto; background: #fff; padding: 40px; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); text-align: center; }
+h1 { margin-top: 0; font-size: 26px; font-weight: 600; }
+label { display: block; text-align: left; margin-top: 20px; font-size: 14px; }
+input { width: 100%; padding: 10px; margin-top: 5px; background: #d9d9d9; border: none; border-radius: 6px; font-size: 14px; box-sizing: border-box; }
+.cadastro { margin: 20px 0; font-size: 14px; text-align: left; }
+button { width: 140px; padding: 10px; border: none; background: #d9534f; color: white; font-size: 18px; border-radius: 8px; cursor: pointer; }
+footer { position: fixed; bottom: 10px; left: 10px; font-size: 12px; }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">GLCG<span>SUPERMERCADO</span></div>
+</header>
+
+<div class="card">
+    <h1>Login</h1>
+    <label for="login">Usuário, CPF ou E-mail</label>
+    <input id="login" type="text" placeholder="Digite seu documento ou e-mail" />
+    <label for="senha">Senha</label>
+    <input id="senha" type="password" placeholder="Digite sua senha" />
+    <div class="cadastro">Não tem uma conta? <a href="cadastro.html">Cadastre-se</a></div>
+    <button onclick="login()">Entrar</button>
+</div>
+
+<footer>© 2026 GLCG SUPERMERCADO. Todos os direitos reservados.</footer>
+
+<script>
+function login() {
+  const origInput = document.getElementById('login').value.trim();
+  const userInputLimpo = origInput.replace(/\D/g, ''); 
+  const passInput = document.getElementById('senha').value;
+
+  if (origInput === '' || passInput === '') {
+    alert('Preencha todos os campos.');
+    return;
+  }
+
+  // Conta Administrador Mestre Fixo
+  if ((userInputLimpo === '71318419190' || origInput === 'gabriel.coutinho.71318@alunos.unialfa.com.br') && passInput === '05010411') {
+    const adminSession = { 
+      login: '713.184.191-90', 
+      email: 'gabriel.coutinho.71318@alunos.unialfa.com.br', 
+      isAdmin: true 
+    };
+    localStorage.setItem('usuarioLogado', JSON.stringify(adminSession));
+    window.location.href = 'principal.html';
+    return;
+  }
+
+  const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+  const usuarioEncontrado = usuarios.find(u => u.login.replace(/\D/g, '') === userInputLimpo || u.email === origInput);
+
+  if (!usuarioEncontrado) {
+    alert('Usuário não encontrado! Verifique os dados.');
+    return;
+  }
+
+  if (usuarioEncontrado.senha !== passInput) {
+    alert('Senha incorreta!');
+    return;
+  }
+
+  localStorage.setItem('usuarioLogado', JSON.stringify(usuarioEncontrado));
+  window.location.href = 'principal.html';
+}
+</script>
+</body>
+</html>

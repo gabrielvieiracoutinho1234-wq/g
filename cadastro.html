@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro - GLCG Supermercado</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      width: 100%;
+      background-color: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px 0;
+    }
+
+    .logo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #c0392b;
+      font-weight: 700;
+      font-size: 38px;
+      line-height: 1;
+    }
+
+    .logo span {
+      color: #2e7d32;
+      font-size: 14px;
+      letter-spacing: 1px;
+    }
+
+    .form-container {
+      background-color: #fff;
+      margin-top: 40px;
+      padding: 30px 40px 40px 40px;
+      border-radius: 20px;
+      box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.2);
+      text-align: center;
+      width: 360px;
+      position: relative;
+    }
+
+    .btn-voltar {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: none;
+      border: none;
+      color: #666;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      transition: background-color 0.2s, color 0.2s;
+    }
+
+    .btn-voltar:hover {
+      background-color: #f0f0f0;
+      color: #000;
+    }
+
+    .form-container h2 {
+      margin-top: 10px;
+      margin-bottom: 25px;
+      font-size: 26px;
+      font-weight: 600;
+    }
+
+    label {
+      display: block;
+      text-align: left;
+      font-size: 14px;
+      margin-bottom: 5px;
+      color: #222;
+    }
+
+    input {
+      width: 100%;
+      padding: 11px;
+      margin-bottom: 15px;
+      border: none;
+      border-radius: 6px;
+      background-color: #e9e9e9;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    /* Estilo diferenciado para o campo de admin saltar aos olhos */
+    .input-chave-admin {
+      background-color: #fff0f0;
+      border: 1px solid #ffcccc;
+    }
+
+    .btn-cadastrar {
+      background-color: #d44a4a;
+      color: white;
+      border: none;
+      padding: 11px 20px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .btn-cadastrar:hover {
+      background-color: #b63b3b;
+    }
+
+    .erro, .sucesso {
+      padding: 8px;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      display: none;
+      font-size: 14px;
+    }
+
+    .erro {
+      color: #d9534f;
+      background-color: #fceaea;
+    }
+
+    .sucesso {
+      color: #2e7d32;
+      background-color: #e8f5e9;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">
+      GLCG
+      <span>SUPERMERCADO</span>
+    </div>
+  </header>
+
+  <div class="form-container">
+    <button class="btn-voltar" onclick="window.location.href='login.html'" title="Voltar para o Login">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+    </button>
+
+    <h2>Cadastro</h2>
+
+    <div id="mensagemErro" class="erro"></div>
+    <div id="mensagemSucesso" class="sucesso">Cadastro realizado com sucesso! Redirecionando...</div>
+
+    <form id="formCadastro">
+      <label for="cpf">CPF ou CNPJ</label>
+      <input type="text" id="cpf" placeholder="Digite seu CPF ou CNPJ" maxlength="18" required>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" placeholder="Digite seu email" required>
+
+      <label for="senha">Senha</label>
+      <input type="password" id="senha" placeholder="Digite sua senha" required>
+
+      <label for="confirmar">Confirme sua senha</label>
+      <input type="password" id="confirmar" placeholder="Digite novamente sua senha" required>
+
+      <!-- NOVO CAMPO: Chave de Ativação Obrigatória -->
+      <label for="chaveAtivacao" style="color: #c0392b; font-weight: 600;">Chave de Ativação Admin</label>
+      <input type="password" id="chaveAtivacao" class="input-chave-admin" placeholder="Código secreto para liberar acesso" required>
+
+      <button type="submit" class="btn-cadastrar">Cadastrar</button>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById('formCadastro');
+    const email = document.getElementById('email');
+    const senha = document.getElementById('senha');
+    const confirmar = document.getElementById('confirmar');
+    const chaveAtivacao = document.getElementById('chaveAtivacao');
+    const msgErro = document.getElementById('mensagemErro');
+    const msgSucesso = document.getElementById('mensagemSucesso');
+    const cpfInput = document.getElementById('cpf');
+
+    // Máscara visual para CPF e CNPJ
+    cpfInput.addEventListener('input', function() {
+      let valor = cpfInput.value.replace(/\D/g, '');
+      if (valor.length <= 11) {
+        valor = valor.replace(/(\d{3})(\d)/, '$1.$2');
+        valor = valor.replace(/(\d{3})(\d)/, '$1.$2');
+        valor = valor.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+      } else {
+        valor = valor.replace(/^(\d{2})(\d)/, '$1.$2');
+        valor = valor.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
+        valor = valor.replace(/\.(\d{3})(\d)/, '.$1/$2');
+        valor = valor.replace(/(\d{4})(\d{1,2})$/, '$1-$2');
+      }
+      cpfInput.value = valor;
+    });
+
+    // Algoritmo Matemático de Validação de CPF Oficial
+    function validarCPF(cpf) {
+      if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
+      let soma = 0, resto;
+      for (let i = 1; i <= 9; i++) soma += parseInt(cpf.substring(i-1, i)) * (11 - i);
+      resto = (soma * 10) % 11;
+      if ((resto === 10) || (resto === 11)) resto = 0;
+      if (resto !== parseInt(cpf.substring(9, 10))) return false;
+      soma = 0;
+      for (let i = 1; i <= 10; i++) soma += parseInt(cpf.substring(i-1, i)) * (12 - i);
+      resto = (soma * 10) % 11;
+      if ((resto === 10) || (resto === 11)) resto = 0;
+      if (resto !== parseInt(cpf.substring(10, 11))) return false;
+      return true;
+    }
+
+    // Algoritmo Matemático de Validação de CNPJ Oficial
+    function validarCNPJ(cnpj) {
+      if (cnpj.length !== 14 || /^(\d)\1+$/.test(cnpj)) return false;
+      let tamanho = cnpj.length - 2;
+      let numeros = cnpj.substring(0, tamanho);
+      let digitos = cnpj.substring(tamanho);
+      let soma = 0, pos = tamanho - 7;
+      for (let i = tamanho; i >= 1; i--) {
+        soma += numeros.charAt(tamanho - i) * pos--;
+        if (pos < 2) pos = 9;
+      }
+      let resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
+      if (resultado != digitos.charAt(0)) return false;
+      tamanho = tamanho + 1;
+      numeros = cnpj.substring(0, tamanho);
+      soma = 0;
+      pos = tamanho - 7;
+      for (let i = tamanho; i >= 1; i--) {
+        soma += numeros.charAt(tamanho - i) * pos--;
+        if (pos < 2) pos = 9;
+      }
+      resultado = soma % 11 < 2 ? 0 : 11 - (soma % 11);
+      if (resultado != digitos.charAt(1)) return false;
+      return true;
+    }
+
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+      msgErro.style.display = 'none';
+      msgSucesso.style.display = 'none';
+
+      // VERIFICAÇÃO DA CHAVE SECRETA ADMIN
+      const CHAVE_CORRETA = "GLCG2026"; // Altere aqui se quiser mudar a senha secreta
+      if (chaveAtivacao.value.trim() !== CHAVE_CORRETA) {
+        msgErro.textContent = 'Chave de Ativação inválida! Você não tem permissão para se cadastrar.';
+        msgErro.style.display = 'block';
+        return;
+      }
+
+      const valorCpfLimpo = cpfInput.value.replace(/\D/g, '');
+
+      if (senha.value !== confirmar.value) {
+        msgErro.textContent = 'As senhas não coincidem!';
+        msgErro.style.display = 'block';
+        return;
+      }
+
+      // Validação Real ativa aqui
+      if (valorCpfLimpo.length <= 11) {
+        if (!validarCPF(valorCpfLimpo)) {
+          msgErro.textContent = 'CPF Inválido! Insira um documento verdadeiro.';
+          msgErro.style.display = 'block';
+          return;
+        }
+      } else {
+        if (!validarCNPJ(valorCpfLimpo)) {
+          msgErro.textContent = 'CNPJ Inválido! Insira um documento verdadeiro.';
+          msgErro.style.display = 'block';
+          return;
+        }
+      }
+
+      const novosUsuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+      
+      if (novosUsuarios.some(u => u.login.replace(/\D/g, '') === valorCpfLimpo || u.email === email.value)) {
+        msgErro.textContent = 'Este usuário ou e-mail já está cadastrado!';
+        msgErro.style.display = 'block';
+        return;
+      }
+
+      novosUsuarios.push({
+        login: cpfInput.value,
+        email: email.value,
+        senha: senha.value,
+        isAdmin: false
+      });
+
+      localStorage.setItem('usuarios', JSON.stringify(novosUsuarios));
+
+      msgSucesso.style.display = 'block';
+      form.reset();
+
+      setTimeout(() => {
+        window.location.href = "login.html";
+      }, 2000);
+    });
+  </script>
+</body>
+</html>
