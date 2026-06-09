@@ -210,7 +210,6 @@
       cpfInput.value = valor;
     });
 
-    // (Funções validarCPF e validarCNPJ permanecem iguais)
     function validarCPF(cpf) {
       if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
       let soma = 0, resto;
@@ -256,14 +255,15 @@
       msgErro.style.display = 'none';
       msgSucesso.style.display = 'none';
 
-      const CHAVE_CORRETA = "GLCG2026"; 
+      const CHAVE_CORRETA = "GLCG2026";
       if (chaveAtivacao.value.trim() !== CHAVE_CORRETA) {
-        msgErro.textContent = 'Chave de Ativação inválida!';
+        msgErro.textContent = 'Chave de Ativação inválida! Você não tem permissão para se cadastrar.';
         msgErro.style.display = 'block';
         return;
       }
 
       const valorCpfLimpo = cpfInput.value.replace(/\D/g, '');
+
       if (senha.value !== confirmar.value) {
         msgErro.textContent = 'As senhas não coincidem!';
         msgErro.style.display = 'block';
@@ -272,19 +272,20 @@
 
       if (valorCpfLimpo.length <= 11) {
         if (!validarCPF(valorCpfLimpo)) {
-          msgErro.textContent = 'CPF Inválido!';
+          msgErro.textContent = 'CPF Inválido! Insira um documento verdadeiro.';
           msgErro.style.display = 'block';
           return;
         }
       } else {
         if (!validarCNPJ(valorCpfLimpo)) {
-          msgErro.textContent = 'CNPJ Inválido!';
+          msgErro.textContent = 'CNPJ Inválido! Insira um documento verdadeiro.';
           msgErro.style.display = 'block';
           return;
         }
       }
 
       const novosUsuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+      
       if (novosUsuarios.some(u => u.login.replace(/\D/g, '') === valorCpfLimpo || u.email === email.value)) {
         msgErro.textContent = 'Este usuário ou e-mail já está cadastrado!';
         msgErro.style.display = 'block';
@@ -299,10 +300,11 @@
       });
 
       localStorage.setItem('usuarios', JSON.stringify(novosUsuarios));
+
       msgSucesso.style.display = 'block';
       form.reset();
 
-      // CORRIGIDO: Redirecionamento agora para index.html
+      // CORRIGIDO: Redirecionamento após cadastro agora para index.html
       setTimeout(() => {
         window.location.href = "index.html";
       }, 2000);
