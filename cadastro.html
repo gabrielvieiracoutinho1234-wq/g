@@ -101,7 +101,6 @@
       box-sizing: border-box;
     }
 
-    /* Estilo diferenciado para o campo de admin saltar aos olhos */
     .input-chave-admin {
       background-color: #fff0f0;
       border: 1px solid #ffcccc;
@@ -154,7 +153,7 @@
   </header>
 
   <div class="form-container">
-    <button class="btn-voltar" onclick="window.location.href='login.html'" title="Voltar para o Login">
+    <button class="btn-voltar" onclick="window.location.href='index.html'" title="Voltar para o Login">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <line x1="19" y1="12" x2="5" y2="12"></line>
         <polyline points="12 19 5 12 12 5"></polyline>
@@ -179,7 +178,6 @@
       <label for="confirmar">Confirme sua senha</label>
       <input type="password" id="confirmar" placeholder="Digite novamente sua senha" required>
 
-      <!-- NOVO CAMPO: Chave de Ativação Obrigatória -->
       <label for="chaveAtivacao" style="color: #c0392b; font-weight: 600;">Chave de Ativação Admin</label>
       <input type="password" id="chaveAtivacao" class="input-chave-admin" placeholder="Código secreto para liberar acesso" required>
 
@@ -197,7 +195,6 @@
     const msgSucesso = document.getElementById('mensagemSucesso');
     const cpfInput = document.getElementById('cpf');
 
-    // Máscara visual para CPF e CNPJ
     cpfInput.addEventListener('input', function() {
       let valor = cpfInput.value.replace(/\D/g, '');
       if (valor.length <= 11) {
@@ -213,7 +210,7 @@
       cpfInput.value = valor;
     });
 
-    // Algoritmo Matemático de Validação de CPF Oficial
+    // (Funções validarCPF e validarCNPJ permanecem iguais)
     function validarCPF(cpf) {
       if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
       let soma = 0, resto;
@@ -229,7 +226,6 @@
       return true;
     }
 
-    // Algoritmo Matemático de Validação de CNPJ Oficial
     function validarCNPJ(cnpj) {
       if (cnpj.length !== 14 || /^(\d)\1+$/.test(cnpj)) return false;
       let tamanho = cnpj.length - 2;
@@ -260,39 +256,35 @@
       msgErro.style.display = 'none';
       msgSucesso.style.display = 'none';
 
-      // VERIFICAÇÃO DA CHAVE SECRETA ADMIN
-      const CHAVE_CORRETA = "GLCG2026"; // Altere aqui se quiser mudar a senha secreta
+      const CHAVE_CORRETA = "GLCG2026"; 
       if (chaveAtivacao.value.trim() !== CHAVE_CORRETA) {
-        msgErro.textContent = 'Chave de Ativação inválida! Você não tem permissão para se cadastrar.';
+        msgErro.textContent = 'Chave de Ativação inválida!';
         msgErro.style.display = 'block';
         return;
       }
 
       const valorCpfLimpo = cpfInput.value.replace(/\D/g, '');
-
       if (senha.value !== confirmar.value) {
         msgErro.textContent = 'As senhas não coincidem!';
         msgErro.style.display = 'block';
         return;
       }
 
-      // Validação Real ativa aqui
       if (valorCpfLimpo.length <= 11) {
         if (!validarCPF(valorCpfLimpo)) {
-          msgErro.textContent = 'CPF Inválido! Insira um documento verdadeiro.';
+          msgErro.textContent = 'CPF Inválido!';
           msgErro.style.display = 'block';
           return;
         }
       } else {
         if (!validarCNPJ(valorCpfLimpo)) {
-          msgErro.textContent = 'CNPJ Inválido! Insira um documento verdadeiro.';
+          msgErro.textContent = 'CNPJ Inválido!';
           msgErro.style.display = 'block';
           return;
         }
       }
 
       const novosUsuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
-      
       if (novosUsuarios.some(u => u.login.replace(/\D/g, '') === valorCpfLimpo || u.email === email.value)) {
         msgErro.textContent = 'Este usuário ou e-mail já está cadastrado!';
         msgErro.style.display = 'block';
@@ -307,7 +299,6 @@
       });
 
       localStorage.setItem('usuarios', JSON.stringify(novosUsuarios));
-
       msgSucesso.style.display = 'block';
       form.reset();
 
